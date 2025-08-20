@@ -3,7 +3,7 @@
 An intelligent, conversational AI application that allows you to chat with your PDF documents. Upload a file, and get accurate, context-aware answers from a variety of powerful Large Language Models (LLMs).
 
 ### 🚀 Application Demo
-
+click on the image below to see demo.
 
 [![Alt text for your video thumbnail](https://drive.google.com/uc?export=view&id=1IEbgthI9g28FNzFW5QNoijdqubqueUra)](https://drive.google.com/file/d/1LdniHb6cXIgnLZdFOa8f1oGlkF0srYwc/view?usp=sharing)
 
