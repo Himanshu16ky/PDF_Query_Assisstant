@@ -8,5 +8,4 @@ pdfplumber
 sentence-transformers
 chromadb
 transformers==4.50.3
-sqlite3
-
+setuptools wheel
