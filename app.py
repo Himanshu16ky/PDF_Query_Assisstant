@@ -25,43 +25,56 @@ st.markdown("""
 Welcome! Upload a PDF, select your preferred AI model, and ask any questions you have about the document.
 """)
 
-# Leftbar for Controls
-with st.sidebar:
-    st.header("⚙️ Controls")
+# PDF Upload Section in Main Area
+st.subheader("📁 Upload Document")
+col1, col2 = st.columns([2, 1])
 
-    uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
+with col1:
+    uploaded_file = st.file_uploader("Choose your PDF file", type="pdf", label_visibility="collapsed")
 
+with col2:
     if uploaded_file is not None:
         # Display the uploaded file's name
         st.markdown(f"""
-        <div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
-            <p style="margin: 0;"><b>Uploaded:</b> {uploaded_file.name}</p>
+        <div style="padding: 10px; border: 1px solid #28a745; border-radius: 8px; background-color: #d4edda; margin-top: 8px;">
+            <p style="margin: 0; color: #155724;"><b>✅ Uploaded:</b> {uploaded_file.name}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div style="padding: 10px; border: 1px solid #ffc107; border-radius: 8px; background-color: #fff3cd; margin-top: 8px;">
+            <p style="margin: 0; color: #856404;"><b>⏳ Waiting:</b> No file selected</p>
         </div>
         """, unsafe_allow_html=True)
 
-        # Process the PDF if it's new or has changed
-        if st.session_state.uploaded_file_name != uploaded_file.name:
-            st.session_state.processing = True
-            try:
-                with st.spinner("Processing PDF... This may take a moment."):
-                    st.session_state.db = process_and_create_vector_store(uploaded_file)
-                    st.session_state.uploaded_file_name = uploaded_file.name
-                    st.session_state.chat_history = [] # Clear history for new file
-                    st.session_state.processing = False
-            except Exception as e:
+# Process the PDF if it's new or has changed
+if uploaded_file is not None:
+    if st.session_state.uploaded_file_name != uploaded_file.name:
+        st.session_state.processing = True
+        try:
+            with st.spinner("Processing PDF... This may take a moment."):
+                st.session_state.db = process_and_create_vector_store(uploaded_file)
+                st.session_state.uploaded_file_name = uploaded_file.name
+                st.session_state.chat_history = [] # Clear history for new file
                 st.session_state.processing = False
-                st.error(f"Error processing PDF: {e}. Please try a different PDF.")
-                st.session_state.db = None
-                st.session_state.uploaded_file_name = None
-            if st.session_state.db is not None:
-                st.success("PDF processed successfully! You can now ask questions.")
-    else:
-        st.session_state.db = None
-        st.session_state.uploaded_file_name = None
-        st.session_state.processing = False
+        except Exception as e:
+            st.session_state.processing = False
+            st.error(f"Error processing PDF: {e}. Please try a different PDF.")
+            st.session_state.db = None
+            st.session_state.uploaded_file_name = None
+        if st.session_state.db is not None:
+            st.success("PDF processed successfully! You can now ask questions.")
+else:
+    st.session_state.db = None
+    st.session_state.uploaded_file_name = None
+    st.session_state.processing = False
 
-    # Model and Chunk Selection by user
-    st.subheader("Model Configuration")
+st.divider()
+
+# Sidebar for Model Configuration Only
+with st.sidebar:
+    st.header("⚙️ Model Configuration")
+
     model_name = st.selectbox(
         "Select AI Model",
         ("Gemini-Flash","Grok llama-3.3","Cohere"),
@@ -77,13 +90,15 @@ with st.sidebar:
         help="How many relevant text chunks from the PDF should be sent to the model? Higher values can provide more context but may increase processing time."
     )
     
+    st.divider()
+    
     #  Clear Chat Button 
-    if st.button("Clear Chat History"):
+    if st.button("Clear Chat History", use_container_width=True):
         st.session_state.chat_history = []
         st.rerun()
 
 # Main Chat Interface 
-st.subheader("Chat with your Document")
+st.subheader("💬 Chat with your Document")
 
 # Display chat history
 for message in st.session_state.chat_history:
@@ -141,5 +156,3 @@ if query:
                         message_placeholder.markdown(full_response)
                         
                         st.session_state.chat_history.append({"role": "assistant", "content": full_response})
-                    
-                
