@@ -50,6 +50,7 @@ httplib2==0.22.0
 httptools==0.6.4
 httpx==0.28.1
 httpx-sse==0.4.0
+huggingface-hub==0.34.4
 humanfriendly==10.0
 idna==3.10
 importlib_metadata==8.7.0
@@ -61,12 +62,14 @@ jsonpatch==1.33
 jsonpointer==3.0.0
 jsonschema==4.25.0
 jsonschema-specifications==2025.4.1
+kubernetes==33.1.0
 langchain==0.3.27
 langchain-cohere==0.4.5
 langchain-community==0.3.27
 langchain-core==0.3.74
 langchain-google-genai==2.1.9
 langchain-groq==0.3.7
+langchain-huggingface==0.3.1
 langchain-text-splitters==0.3.9
 langsmith==0.4.14
 markdown-it-py==4.0.0
@@ -113,6 +116,7 @@ Pygments==2.19.2
 pyparsing==3.2.3
 pypdfium2==4.30.0
 PyPika==0.48.9
+pyproject_hooks==1.2.0
 pyreadline3==3.5.4
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
@@ -126,6 +130,7 @@ requests-toolbelt==1.0.0
 rich==14.1.0
 rpds-py==0.27.0
 rsa==4.9.1
+safetensors==0.6.2
 scikit-learn==1.7.1
 scipy==1.16.1
 sentence-transformers==5.1.0
@@ -140,7 +145,9 @@ streamlit==1.48.1
 sympy==1.14.0
 tenacity==8.5.0
 threadpoolctl==3.6.0
+tokenizers==0.21.4
 toml==0.10.2
+torch==2.8.0
 tornado==6.5.2
 tqdm==4.67.1
 transformers==4.55.1
