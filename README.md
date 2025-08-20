@@ -64,8 +64,8 @@ Follow these instructions to set up and run the project on your local machine.
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-cd your-repo-name
+git clone https://github.com/Himanshu16ky/PDF_Query_Assisstant.git
+cd PDF_Query_Assisstant
 ```
 
 ### 2. Set Up a Virtual Environment
