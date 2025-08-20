@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
@@ -31,7 +32,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
 
     # Define a unique directory for this PDF's database
     pdf_basename = os.path.splitext(uploaded_file.name)[0]
-    db_directory = os.path.join(temp_dir, f"{pdf_basename}_chroma_db")
+    db_directory = os.path.join(temp_dir, f"{pdf_basename}_FAISS_db")
 
 
     print(f"Processing {uploaded_file.name} and creating a new vector store...")
@@ -50,7 +51,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
 
     # --- Create and persist the new vector store ---
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    db = Chroma.from_documents(texts, embeddings, persist_directory=db_directory)
+    db = FAISS.from_documents(texts, embeddings, persist_directory=db_directory)
     db.persist()
 
     print("New vector store created successfully.")
@@ -82,3 +83,4 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
         return_source_documents=True
     )
     return qa_chain
+
