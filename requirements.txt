@@ -8,3 +8,4 @@ pdfplumber
 sentence-transformers
 chromadb
 transformers==4.50.3
+pysqlite3-binary
