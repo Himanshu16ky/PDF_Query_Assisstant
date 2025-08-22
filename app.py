@@ -22,7 +22,7 @@ if "processing" not in st.session_state:
 # UI 
 st.title("📄 PDF Query Assistant")
 st.markdown("""
-Welcome! Upload a PDF, select your preferred AI model, , and ask any questions you have about the document.\n 
+Welcome! Upload a PDF, select your preferred AI model using sidebar (>>), and ask any questions you have about the document.
 Remember not to upload sensitive or confidential documents, as they will be processed by AI models.
 """)
 
@@ -156,5 +156,6 @@ if query:
                         message_placeholder.markdown(full_response)
                         
                         st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+
 
 
