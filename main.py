@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain_community.vectorstores import FAISS  # Changed from Chroma to FAISS
+from langchain_community.vectorstores import FAISS 
 from langchain.chains import RetrievalQA
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
@@ -18,10 +18,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
-    """
-    Processes an uploaded PDF file and creates a fresh vector store.
-    It saves the file temporarily to read it.
-    """
+    # Processes an uploaded PDF file and creates a fresh vector store. It saves the file temporarily to read it.
+    
     try:
         # Validate input file
         if uploaded_file is None:
@@ -30,7 +28,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
         if uploaded_file.size == 0:
             raise ValueError("Uploaded file is empty")
         
-        # Create a temporary directory to store the uploaded file
+        # a temporary directory to store the uploaded file
         if not os.path.exists(temp_dir):
             os.makedirs(temp_dir)
 
@@ -50,7 +48,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
 
         logger.info(f"Processing {uploaded_file.name} and creating a new vector store...")
 
-        # --- Process the PDF using pdfplumber ---
+        #  Processing the PDF using pdfplumber 
         all_docs = []
         try:
             with pdfplumber.open(temp_file_path) as pdf:
@@ -78,7 +76,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
         except Exception as e:
             raise RuntimeError(f"Failed to process PDF: {str(e)}")
         finally:
-            # Clean up temporary file
+            # Cleaning up temporary file
             try:
                 if os.path.exists(temp_file_path):
                     os.remove(temp_file_path)
@@ -111,7 +109,7 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
         
         logger.info(f"Created {len(valid_texts)} valid text chunks")
 
-        # --- Create and save the new FAISS vector store ---
+        # Create and save the new FAISS vector store 
         try:
             embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
         except Exception as e:
@@ -154,9 +152,8 @@ def process_and_create_vector_store(uploaded_file, temp_dir="temp_pdf_data"):
         raise
 
 def get_qa_chain(db, model_name="Gemini-Flash", k=2):
-    """
-    Creates and returns a RetrievalQA chain configured with the specified model and number of chunks (k).
-    """
+    # Creates and returns a RetrievalQA chain configured with the specified model and number of chunks (k).
+    
     try:
         logger.info(f"Setting up QA chain with model: {model_name} and k={k}")
         
@@ -167,7 +164,7 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
         if k <= 0:
             raise ValueError("k must be greater than 0")
 
-        # --- Model Selection Logic ---
+        #  Model Selection Logic 
         if model_name == "Gemini-Flash":
             try:
                 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
@@ -207,9 +204,8 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
         logger.error(f"Error in get_qa_chain: {str(e)}")
         raise
 
-# Optional: Utility functions for manual FAISS operations
 def save_faiss_index(db, file_path):
-    """Save FAISS index to specified path"""
+    # Save FAISS index to specified path
     try:
         if db is None:
             raise ValueError("Database is None")
@@ -220,7 +216,7 @@ def save_faiss_index(db, file_path):
         raise
 
 def load_faiss_index(file_path, embeddings):
-    """Load FAISS index from specified path"""
+    # Load FAISS index from specified path
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"FAISS index not found at {file_path}")
@@ -235,3 +231,4 @@ def load_faiss_index(file_path, embeddings):
     except Exception as e:
         logger.error(f"Error loading FAISS index: {str(e)}")
         return None
+
