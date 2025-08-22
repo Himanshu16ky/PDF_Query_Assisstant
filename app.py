@@ -34,7 +34,6 @@ with col1:
 
 with col2:
     if uploaded_file is not None:
-        # Display the uploaded file's name
         st.markdown(f"""
         <div style="padding: 10px; border: 1px solid #28a745; border-radius: 8px; background-color: #d4edda; margin-top: 8px;">
             <p style="margin: 0; color: #155724;"><b>✅ Uploaded:</b> {uploaded_file.name}</p>
@@ -47,7 +46,7 @@ with col2:
         </div>
         """, unsafe_allow_html=True)
 
-# Process the PDF if it's new or has changed
+# Process the PDF if its new or has changed
 if uploaded_file is not None:
     if st.session_state.uploaded_file_name != uploaded_file.name:
         st.session_state.processing = True
@@ -131,7 +130,7 @@ if query:
             message_placeholder = st.empty()
             full_response = ""
             with st.spinner("Generating most relavant answer..."):
-                # Get the QA chain and run the query
+                # get QA chain and run the query
                 qa_chain = get_qa_chain(st.session_state.db, model_name, k_chunks)
                 try:
                     result = qa_chain({"query": query})
@@ -148,7 +147,7 @@ if query:
                             st.info(f"Source: {doc.metadata['source']} - Page: {doc.metadata['page']}")
                             st.code(doc.page_content)
 
-                    # Add assistant response to chat history
+                    # assistant response to chat history
                     st.session_state.chat_history.append({"role": "assistant", "content": full_response})
                 except Exception as e:
                         st.error(f"❗ Error: {e} occurred while processing your query.\nPlease try again with a different Model.")
@@ -156,3 +155,4 @@ if query:
                         message_placeholder.markdown(full_response)
                         
                         st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+
