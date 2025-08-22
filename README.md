@@ -4,9 +4,7 @@ An intelligent, conversational AI application that allows you to chat with your 
 
 ### 🚀 Application Demo
 click on the image below to see demo.
-
-[![Alt text for your video thumbnail](https://drive.google.com/uc?export=view&id=1IEbgthI9g28FNzFW5QNoijdqubqueUra)](https://drive.google.com/file/d/1LdniHb6cXIgnLZdFOa8f1oGlkF0srYwc/view?usp=sharing)
-
+[![Alt text for your video thumbnail](https://drive.google.com/uc?export=view&id=1G_0yz_8fYQG9D1jHXITCt2lJ5RF0KWlg)](https://drive.google.com/file/d/1LdniHb6cXIgnLZdFOa8f1oGlkF0srYwc/view?usp=sharing)
 
 ---
 
