@@ -16,8 +16,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 from langchain_cohere import ChatCohere 
 
-# Chains
-from langchain.chains import RetrievalQA
+# from langchain.chains import RetrievalQA  # depricated now
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 
 
 load_dotenv()
@@ -199,13 +200,12 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
 
         # Create QA chain
         try:
-            qa_chain = RetrievalQA.from_chain_type(
-                llm=llm,
-                chain_type="stuff",
-                retriever=db.as_retriever(search_kwargs={"k": k}),
-                return_source_documents=True
-            )
-            return qa_chain
+            # qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=db.as_retriever(search_kwargs={"k": k}), return_source_documents=True)  #depricated now
+            combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+            qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
+            
+            response = qa_chain.invoke({"input": user_query})
+            return response
         except Exception as e:
             raise RuntimeError(f"Failed to create QA chain: {str(e)}")
             
