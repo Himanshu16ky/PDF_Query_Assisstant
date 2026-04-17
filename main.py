@@ -1,7 +1,7 @@
 import os
 import pdfplumber
 from dotenv import load_dotenv
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import FAISS 
