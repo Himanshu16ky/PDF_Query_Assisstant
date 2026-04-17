@@ -1,15 +1,24 @@
 import os
+import logging
 import pdfplumber
 from dotenv import load_dotenv
+
+# Core and Splitters
 from langchain_core.documents import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# Community integrations
+from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import FAISS 
-from langchain.chains import RetrievalQA
+
+# AI APIs
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 from langchain_cohere import ChatCohere 
-import logging
+
+# Chains
+from langchain.chains import RetrievalQA
+
 
 load_dotenv()
 
