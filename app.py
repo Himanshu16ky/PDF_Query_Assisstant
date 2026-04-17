@@ -134,18 +134,20 @@ if query:
                 # get QA chain and run the query
                 qa_chain = get_qa_chain(st.session_state.db, model_name, k_chunks)
                 try:
-                    result = qa_chain({"query": query})
-                    response_text = result["result"]
+                    result = qa_chain.invoke({"input": query})                    
+                    response_text = result["answer"]
+                    
                     for chunk in response_text.split():
                         full_response += chunk + " "
                         time.sleep(0.05)
                         message_placeholder.markdown(full_response + "▌")
                     message_placeholder.markdown(full_response)
 
-                    # Display source documents
                     with st.expander("View Sources"):
-                        for doc in result["source_documents"]:
-                            st.info(f"Source: {doc.metadata['source']} - Page: {doc.metadata['page']}")
+                        for doc in result["context"]:
+                            source = doc.metadata.get('source', 'Unknown')
+                            page = doc.metadata.get('page', 'Unknown')
+                            st.info(f"Source: {source} - Page: {page}")
                             st.code(doc.page_content)
 
                     # assistant response to chat history
