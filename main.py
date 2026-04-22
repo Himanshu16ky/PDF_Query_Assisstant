@@ -11,8 +11,9 @@ from langchain_groq import ChatGroq
 from langchain_cohere import ChatCohere 
 
 # from langchain.chains import RetrievalQA  # depricated now
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain_classic.chains import RetrievalQA
+# from langchain_core.prompts import ChatPromptTemplate
+# from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 
 
 load_dotenv()
@@ -192,7 +193,21 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
         else:
             raise ValueError(f"Model '{model_name}' is not supported.")
 
+
+
         # Create QA chain
+        try:
+            qa_chain = RetrievalQA.from_chain_type(
+                llm=llm,
+                chain_type="stuff",
+                retriever=db.as_retriever(search_kwargs={"k": k}),
+                return_source_documents=True
+            )
+            return qa_chain
+        except Exception as e:
+            raise RuntimeError(f"Failed to create QA chain: {str(e)}")
+        # Create QA chain
+        
     #     try:
     #         # qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=db.as_retriever(search_kwargs={"k": k}), return_source_documents=True)  #depricated now
     #         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
@@ -206,24 +221,24 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
     # except Exception as e:
     #     logger.error(f"Error in get_qa_chain: {str(e)}")
     #     raise
-        try:
-            # 1. Define the system prompt so the AI knows how to answer
-            system_prompt = (
-                "You are a helpful assistant. Use the following pieces of retrieved context to answer the user's question. "
-                "If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise."
-                "\n\nContext:\n{context}"
-            )
-            prompt = ChatPromptTemplate.from_messages([
-                ("system", system_prompt),
-                ("human", "{input}"),
-            ])
-            retriever = db.as_retriever(search_kwargs={"k": k})
-            combine_docs_chain = create_stuff_documents_chain(llm, prompt)
-            qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
-            return qa_chain
+        # try:
+        #     # 1. Define the system prompt so the AI knows how to answer
+        #     system_prompt = (
+        #         "You are a helpful assistant. Use the following pieces of retrieved context to answer the user's question. "
+        #         "If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise."
+        #         "\n\nContext:\n{context}"
+        #     )
+        #     prompt = ChatPromptTemplate.from_messages([
+        #         ("system", system_prompt),
+        #         ("human", "{input}"),
+        #     ])
+        #     retriever = db.as_retriever(search_kwargs={"k": k})
+        #     combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+        #     qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
+        #     return qa_chain
             
-        except Exception as e:
-            raise RuntimeError(f"Failed to create QA chain: {str(e)}")
+        # except Exception as e:
+        #     raise RuntimeError(f"Failed to create QA chain: {str(e)}")
             
     except Exception as e:
         logger.error(f"Error in get_qa_chain: {str(e)}")
