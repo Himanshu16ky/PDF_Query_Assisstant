@@ -17,7 +17,7 @@ from langchain_groq import ChatGroq
 from langchain_cohere import ChatCohere 
 
 # from langchain.chains import RetrievalQA  # depricated now
-from langchain.chains import create_retrieval_chain
+from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
 
@@ -199,13 +199,35 @@ def get_qa_chain(db, model_name="Gemini-Flash", k=2):
             raise ValueError(f"Model '{model_name}' is not supported.")
 
         # Create QA chain
+    #     try:
+    #         # qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=db.as_retriever(search_kwargs={"k": k}), return_source_documents=True)  #depricated now
+    #         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+    #         qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
+            
+    #         response = qa_chain.invoke({"input": user_query})
+    #         return response
+    #     except Exception as e:
+    #         raise RuntimeError(f"Failed to create QA chain: {str(e)}")
+            
+    # except Exception as e:
+    #     logger.error(f"Error in get_qa_chain: {str(e)}")
+    #     raise
         try:
-            # qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=db.as_retriever(search_kwargs={"k": k}), return_source_documents=True)  #depricated now
+            # 1. Define the system prompt so the AI knows how to answer
+            system_prompt = (
+                "You are a helpful assistant. Use the following pieces of retrieved context to answer the user's question. "
+                "If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise."
+                "\n\nContext:\n{context}"
+            )
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", system_prompt),
+                ("human", "{input}"),
+            ])
+            retriever = db.as_retriever(search_kwargs={"k": k})
             combine_docs_chain = create_stuff_documents_chain(llm, prompt)
             qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
+            return qa_chain
             
-            response = qa_chain.invoke({"input": user_query})
-            return response
         except Exception as e:
             raise RuntimeError(f"Failed to create QA chain: {str(e)}")
             
