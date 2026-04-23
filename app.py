@@ -135,7 +135,7 @@ if query:
                 qa_chain = get_qa_chain(st.session_state.db, model_name, k_chunks)
                 try:
                     result = qa_chain.invoke({"query": query})                    
-                    response_text = result["answer"]
+                    response_text = result["result"]
                     
                     for chunk in response_text.split():
                         full_response += chunk + " "
@@ -144,7 +144,7 @@ if query:
                     message_placeholder.markdown(full_response)
 
                     with st.expander("View Sources"):
-                        for doc in result["context"]:
+                        for doc in result["source_documents"]:
                             source = doc.metadata.get('source', 'Unknown')
                             page = doc.metadata.get('page', 'Unknown')
                             st.info(f"Source: {source} - Page: {page}")
@@ -153,11 +153,9 @@ if query:
                     # assistant response to chat history
                     st.session_state.chat_history.append({"role": "assistant", "content": full_response})
                 except Exception as e:
-                        st.error(f"❗ Error: {e} occurred while processing your query.\nPlease try again with a different Model.")
+                        st.error(f"❗ Error: {e} | occurred while processing your query.\nPlease try again with a different Model.")
                         full_response = "I apologize, but I encountered an error while processing your query. Please try again with a different model or try again later."
                         message_placeholder.markdown(full_response)
                         
                         st.session_state.chat_history.append({"role": "assistant", "content": full_response})
-
-
 
