@@ -134,7 +134,7 @@ if query:
                 # get QA chain and run the query
                 qa_chain = get_qa_chain(st.session_state.db, model_name, k_chunks)
                 try:
-                    result = qa_chain.invoke({"input": query})                    
+                    result = qa_chain.invoke({"query": query})                    
                     response_text = result["answer"]
                     
                     for chunk in response_text.split():
